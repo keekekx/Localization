@@ -10,12 +10,6 @@ namespace TMPro.EditorUtilities
         private SerializedProperty m_UseLocalization;
         private SerializedProperty m_LocalizationKey;
         private SerializedProperty m_LocalizationTag;
-        protected new struct Foldout
-        {
-            public static bool extraSettings;
-            public static bool materialInspector;
-            public static bool localizationSettings;
-        }
 
         static readonly GUIContent k_RaycastTargetLabel = new GUIContent("Raycast Target", "Whether the text blocks raycasts from the Graphic Raycaster.");
 
@@ -71,15 +65,10 @@ namespace TMPro.EditorUtilities
         }
         protected void DrawLocalizationSettings()
         {
-            Foldout.localizationSettings = EditorGUILayout.Foldout(Foldout.localizationSettings, "Localization Settings", true, TMP_UIStyleManager.boldFoldout);
-            if (Foldout.localizationSettings)
-            {
-                EditorGUI.indentLevel += 1;
-
-                DrawLocalization();
-
-                EditorGUI.indentLevel -= 1;
-            }
+            EditorGUILayout.LabelField("Localization Settings", EditorStyles.boldLabel);
+            EditorGUI.indentLevel += 1;
+            DrawLocalization();
+            EditorGUI.indentLevel -= 1;
         }
 
         protected void DrawRaycastTarget()
@@ -135,13 +124,13 @@ namespace TMPro.EditorUtilities
 
             serializedObject.Update();
 
+            DrawLocalizationSettings();
+
             DrawTextInput();
 
             DrawMainSettings();
 
             DrawExtraSettings();
-
-            DrawLocalizationSettings();
 
             EditorGUILayout.Space();
 

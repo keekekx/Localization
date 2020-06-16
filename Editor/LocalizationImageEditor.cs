@@ -13,10 +13,6 @@ namespace TMPro.EditorUtilities
         private SerializedProperty m_LocalizationTag;
         private SerializedProperty m_LocalizationRegion;
         private bool m_HavePropertiesChanged;
-        protected struct Foldout
-        {
-            public static bool localizationSettings;
-        }
 
         protected override void OnEnable()
         {
@@ -42,15 +38,12 @@ namespace TMPro.EditorUtilities
         }
         protected void DrawLocalizationSettings()
         {
-            Foldout.localizationSettings = EditorGUILayout.Foldout(Foldout.localizationSettings, "Localization Settings", true, TMP_UIStyleManager.boldFoldout);
-            if (Foldout.localizationSettings)
-            {
-                EditorGUI.indentLevel += 1;
+            EditorGUILayout.LabelField("Localization Settings", EditorStyles.boldLabel);
+            EditorGUI.indentLevel += 1;
 
-                DrawLocalization();
+            DrawLocalization();
 
-                EditorGUI.indentLevel -= 1;
-            }
+            EditorGUI.indentLevel -= 1;
         }
 
 
