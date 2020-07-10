@@ -1,6 +1,6 @@
 {
-  "name": "com.tp.localization",
-  "displayName": "TP - Localization",
+  "name": "com.keekekx.localization",
+  "displayName": "KX - Localization",
   "description": "Localization system, support text,image.Depend on Unity.TextMeshPro",
   "keywords": [
     "Localization",
@@ -8,7 +8,7 @@
     "Image",
     "Text"
   ],
-  "version": "1.0.7",
+  "version": "0.0.1",
   "unity": "2019.1",
   "license": "MIT",
   "dependencies": {
