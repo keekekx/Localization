@@ -1,18 +1,19 @@
 {
-    "name": "com.tp.localization",
-    "displayName": "Localization",
-    "description": "Localization system, support text,image.Depend on Unity.TextMeshPro ",
-    "keywords": [
-        "Localization",
-        "TextMeshPro",
-        "Image",
-        "Text"
-      ],
-    "version": "0.0.1",
-    "unity": "2019.1",
-    "license": "MIT",
-    "dependencies": { 
-        "com.unity.ugui": "1.0.0" ,        
-        "com.unity.textmeshpro": "1.0.0" 
-    }
+  "name": "com.tp.localization",
+  "displayName": "TP - Localization",
+  "description": "Localization system, support text,image.Depend on Unity.TextMeshPro",
+  "keywords": [
+    "Localization",
+    "TextMeshPro",
+    "Image",
+    "Text"
+  ],
+  "version": "1.0.7",
+  "unity": "2019.1",
+  "license": "MIT",
+  "dependencies": {
+    "com.unity.ugui": "1.0.0",
+    "com.unity.textmeshpro": "1.0.0",
+    "com.tp.ugui-extensions": "1.0.0"
+  }
 }

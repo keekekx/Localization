@@ -1,8 +1,6 @@
 {
-    "name": "com.tp.localization",
-    "references": [
-        "GUID:6055be8ebefd69e48b49212b09b47b2f"
-    ],
+    "name": "com.tp.localization.Runtime",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

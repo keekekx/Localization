@@ -1,11 +1,11 @@
 {
-    "name": "com.tp.localization.editor",
+    "name": "com.tp.localization.Editor",
     "references": [
-        "GUID:864e4682058e10c4f91700a32fc3f7f9",
-        "GUID:6546d7765b4165b40850b3667f981c26",
-        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+        "GUID:864e4682058e10c4f91700a32fc3f7f9"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

@@ -1,18 +1,39 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
 public static class LocalizationSystem
 {
+    #region Const
+    /// <summary>
+    /// 约定该tag为global text
+    /// </summary>
+    public const string TAG_DEFAULT = "default";
+    
+    /// <summary>
+    /// 约定默认的当前案件的text
+    /// </summary>
+    public const string TAG_CURRENT_CASE = "current_case";
+
+    public const string CASE_PATH_PREFIX = "Assets/Res/Cases";
+    #endregion
+
+    #region Variables
     static Dictionary<string, Dictionary<string, TextLocalizationConfig>> TextDict = new Dictionary<string, Dictionary<string, TextLocalizationConfig>>();
     static Dictionary<string, Dictionary<string, SpriteLocalizationConfig>> SpriteDict = new Dictionary<string, Dictionary<string, SpriteLocalizationConfig>>();
     static List<IOnLocalizationRegionChange> AliveComponents = new List<IOnLocalizationRegionChange>();
-    static string Region = "CN";
+    
+    /// <summary>
+    /// 默认region
+    /// </summary>
+    public static string Region = "CN";
 
     public static Action OnRegionChange;
     public static Func<string, string> OnAfterTreatment;
+    #endregion
 
     static LocalizationSystem()
     {
@@ -22,11 +43,6 @@ public static class LocalizationSystem
             {
                 text.OnLocalizationRegionChange();
             }
-        };
-
-        OnAfterTreatment += (string text) =>
-        {            
-            return text.Replace("%Player%", "KeXiang");
         };
     }
 
@@ -50,6 +66,85 @@ public static class LocalizationSystem
     {
         return Region;
     }
+
+#if UNITY_EDITOR
+    [MenuItem("Tools/Localization System/Convert CSV to SO Config")]
+    public static void TestCSV()
+    {
+        var path = EditorUtility.OpenFilePanel("Open", Application.dataPath, "csv");
+        GenerateTextConfigWithCSV(path);
+    }
+    public static void GenerateTextConfigWithCSV(string path, string save_path = "")
+    {
+        if (!File.Exists(path))
+        {
+            Debug.LogError("CSV is not found!");
+            return;
+        }
+
+        var configDict = new Dictionary<string, TextLocalizationConfig>();
+        var regionDict = new Dictionary<int, string>();
+        var rows = File.ReadAllLines(path);
+        {
+            var cols = new List<string>(rows[1].Trim().Split(','));
+            for (var j = 2; j < cols.Count; j++)
+            {
+                var _region = cols[j];
+                if (string.IsNullOrEmpty(_region) || _region.IndexOf("_Voice") != -1) continue;
+                if (configDict.ContainsKey(_region)) continue;
+                configDict[_region] = ScriptableObject.CreateInstance<TextLocalizationConfig>();
+                regionDict[j] = _region;
+            }
+        }
+        
+        for (var i = 4; i < rows.Length; i++)
+        {
+            var cols = new List<string>(rows[i].Trim().Split(','));
+            var key = cols[0];
+            for (var j = 2; j < cols.Count; j++)
+            {
+                if (regionDict.TryGetValue(j, out var _region))
+                {
+                    configDict[_region].Dictionary.Add(new TextLocalizationConfig.Node()
+                    {
+                        Key = key,
+                        Value = cols[j],
+                    });
+                }
+            }
+        }
+
+        if (string.IsNullOrEmpty(save_path))
+        {
+            save_path = EditorUtility.SaveFolderPanel("Save", Application.dataPath, "LocalizationConfig");
+        }
+        
+        if (string.IsNullOrEmpty(save_path))
+        {
+            Debug.LogError("save path error!");
+            return;
+        }
+
+        save_path = save_path.Replace("\\", "/");
+        if (!save_path.Contains(Application.dataPath))
+        {
+            Debug.LogError($"only save inside project: {Application.dataPath}");
+            return;
+        }
+        
+        save_path = save_path.Replace(Application.dataPath, "Assets/");
+        
+        if (!Directory.Exists(save_path))
+        {
+            Directory.CreateDirectory(save_path);
+        }
+        foreach (var item in configDict)
+        {
+            AssetDatabase.CreateAsset(item.Value, Path.Combine(save_path, $"{item.Key}.asset"));
+        }
+        AssetDatabase.Refresh();
+    }
+#endif
 
     public static void RegisterTextConfig(string region, string tag, TextLocalizationConfig config)
     {
@@ -157,7 +252,7 @@ public static class LocalizationSystem
         AliveComponents.Remove(text);
     }
 
-    public static string GetText(string key, string tag = "default", string region = "")
+    public static string GetText(string key, string tag = TAG_DEFAULT, string region = "")
     {
         if (string.IsNullOrEmpty(region))
         {
@@ -185,7 +280,7 @@ public static class LocalizationSystem
         return text;
     }
 
-    public static Sprite GetSprite(string key, string tag = "default", string region = "")
+    public static Sprite GetSprite(string key, string tag = TAG_DEFAULT, string region = "")
     {
         if (string.IsNullOrEmpty(region))
         {
