@@ -13,12 +13,6 @@ public static class LocalizationSystem
     /// </summary>
     public const string TAG_DEFAULT = "default";
     
-    /// <summary>
-    /// 约定默认的当前案件的text
-    /// </summary>
-    public const string TAG_CURRENT_CASE = "current_case";
-
-    public const string CASE_PATH_PREFIX = "Assets/Res/Cases";
     #endregion
 
     #region Variables
@@ -140,7 +134,7 @@ public static class LocalizationSystem
         }
         foreach (var item in configDict)
         {
-            AssetDatabase.CreateAsset(item.Value, Path.Combine(save_path, $"{item.Key}.asset"));
+            AssetDatabase.CreateAsset(item.Value, Path.Combine(save_path, $"localization_{item.Key}.asset"));
         }
         AssetDatabase.Refresh();
     }
