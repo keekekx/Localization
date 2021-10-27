@@ -86,26 +86,26 @@ public static class LocalizationSystem
         var regionDict = new Dictionary<int, string>();
         var rows = File.ReadAllLines(path);
         {
-            var cols = new List<string>(rows[1].Trim().Split(','));
-            for (var j = 2; j < cols.Count; j++)
+            var cols = new List<string>(rows[0].Trim().Split(','));
+            for (var i = 1; i < cols.Count; i++)
             {
-                var _region = cols[j];
-                if (string.IsNullOrEmpty(_region) || _region.IndexOf("_Voice") != -1) continue;
-                if (configDict.ContainsKey(_region)) continue;
-                configDict[_region] = ScriptableObject.CreateInstance<TextLocalizationConfig>();
-                regionDict[j] = _region;
+                var region = cols[i];
+                if (string.IsNullOrEmpty(region)) continue;
+                if (configDict.ContainsKey(region)) continue;
+                configDict[region] = ScriptableObject.CreateInstance<TextLocalizationConfig>();
+                regionDict[i] = region;
             }
         }
         
-        for (var i = 4; i < rows.Length; i++)
+        for (var i = 2; i < rows.Length; i++)
         {
             var cols = new List<string>(rows[i].Trim().Split(','));
             var key = cols[0];
-            for (var j = 2; j < cols.Count; j++)
+            for (var j = 1; j < cols.Count; j++)
             {
-                if (regionDict.TryGetValue(j, out var _region))
+                if (regionDict.TryGetValue(j, out var region))
                 {
-                    configDict[_region].Dictionary.Add(new TextLocalizationConfig.Node()
+                    configDict[region].Dictionary.Add(new TextLocalizationConfig.Node()
                     {
                         Key = key,
                         Value = cols[j],
